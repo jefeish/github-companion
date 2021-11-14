@@ -1,0 +1,21 @@
+---
+conditions:
+  all:
+    # Title Starts with '.bug'
+    - fact: payload.issue.title
+      operator: regex
+      value: ^\.bug
+    # Less than 15 days until due date
+    - fact: payload.issue.milestone.due_on
+      operator: dateLessThan
+      value: 15
+    # created more than a year ago
+    - fact: payload.repository.created_at
+      operator: dateGreaterThan
+      value: 365
+event:
+  type: createIssueLabels
+  params:
+    data:
+      - bug
+      - question

@@ -1,0 +1,27 @@
+{
+  "conditions": {
+    "all": [
+      {
+        "fact": "payload.issue.labels.name",
+        "operator": "contains",
+        "value": "duplicate"
+      },
+      {
+        "fact": "payload.issue.user.login",
+        "operator": "equal",
+        "value": "jefeish"
+      },
+      {
+        "fact": "payload.sender.type",
+        "operator": "notEqual",
+        "value": "Bot"
+      }
+    ]
+  },
+  "event": {
+    "type": "createComment-by-rule",
+    "params": {
+      "data": "this one has a label called 'duplicate' and a specific user"
+    }
+  }
+}

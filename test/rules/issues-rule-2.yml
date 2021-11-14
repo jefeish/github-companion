@@ -1,0 +1,12 @@
+---
+conditions:
+  all:
+    # Title does not contain '.bug'
+    - fact: payload.issue.title
+      operator: doesNotInclude
+      value: .bug
+event:
+  type: removeIssueLabels
+  params:
+    data:
+      - bug

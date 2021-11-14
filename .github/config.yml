@@ -1,0 +1,7 @@
+---
+# specify a Repo for client-side rules (under `.github/rules/`)
+# Options: `Repo name` or `.` 
+# With `.`, the App will look for client-side rules the Repo that triggerred the event (local)
+rules_repo: migration
+# Refresh interval for client-side rules reload, in minutes.
+rules_refreshInterval: 1

@@ -1,0 +1,14 @@
+---
+conditions:
+  all:
+    - fact: payload.issue.user.login
+      operator: equal
+      value: jefeish
+
+event:
+  type: speech
+  params:
+    data: Let's play by the Rules. This is a Server Rule!
+
+# default is '1'
+priority: 1
