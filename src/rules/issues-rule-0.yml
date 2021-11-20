@@ -1,14 +1,14 @@
 ---
 conditions:
   all:
-    - fact: payload.issue.user.login
+    - fact: payload.action
       operator: equal
-      value: jefeish
+      value: create
 
 event:
-  type: speech
+  type: issueTalk
   params:
-    data: Let's play by the Rules. This is a Server Rule!
+    data: "There was an Issue event. "
 
 # default is '1'
 priority: 1

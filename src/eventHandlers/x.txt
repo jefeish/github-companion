@@ -1,0 +1,16 @@
+
+execute(context, data) {
+    if (typeof data == 'undefined') {
+      data = 'Nothing to say...!'
+    }
+
+    const issueComment = context.issue(
+      {
+        owner: context.payload.repository.owner.login,
+        repo: context.payload.repository.name,
+        issue_number: context.payload.issue.number,
+        body: data
+      }
+    )
+    return context.github.issues.createComment(issueComment)
+  }

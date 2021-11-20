@@ -1,0 +1,36 @@
+---
+conditions:
+  all:
+    # This is an Issue !
+    - fact: payload.issue.id
+      operator: notEmpty
+      value: ''
+    # This Issue was opened !
+    - fact: payload.action
+      operator: equal
+      value: opened
+    # This NOT an Issue comment !
+    - fact: payload.comment.id
+      operator: isEmpty
+      value: ''
+    # Prevent loops
+    - fact: payload.sender.type
+      operator: notEqual
+      value: Bot
+event:
+  type: issueTalk
+  params:
+    data: 
+      # some greeting string
+      greeting: 'hello, there is a new Issue. '
+      # what Issue info do you want to hear about ? (true/false)
+      issue_action: false
+      issue_user: true
+      issue_number: false
+      issue_title: false
+      issue_repository: true
+      issue_body: true
+      issue_comment: false
+
+# default is '1'
+priority: 1

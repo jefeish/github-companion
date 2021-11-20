@@ -9,6 +9,6 @@ conditions:
       operator: notEqual
       value: Bot
 event:
-  type: createComment-by-rule
+  type: issuesCreateComment
   params:
-    data: Let's play by the Rules!
+    data: Thank you for opening this issue!

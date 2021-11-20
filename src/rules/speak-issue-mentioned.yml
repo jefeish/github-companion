@@ -1,0 +1,40 @@
+---
+conditions:
+  all:
+    # This is an Issue
+    - fact: payload.issue.id
+      operator: notEmpty
+      value: ''
+    # This is an Issue Comment !
+    - fact: payload.comment.id
+      operator: notEmpty
+      value: ''
+    # The Issue Comment was created !
+    - fact: payload.action
+      operator: equal
+      value: created
+    # The Issue DOES @mention the user!
+    - fact: payload.comment.body
+      operator: includes
+      value: '@jefeish'
+    # Prevent loops
+    - fact: payload.sender.type
+      operator: notEqual
+      value: Bot
+event:
+  type: issueTalk
+  params:
+    data: 
+      # some greeting string
+      greeting: 'hello @jefeish, someone mentioned you in an Issue '
+      # what Issue info do you want to hear about ? (true/false)
+      issue_action: false
+      issue_user: true
+      issue_number: true
+      issue_title: true
+      issue_repository: true
+      issue_body: false
+      issue_comment: true
+
+# default is '1'
+priority: 1

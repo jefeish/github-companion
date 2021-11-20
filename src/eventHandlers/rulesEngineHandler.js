@@ -64,7 +64,7 @@ class rulesEngineHandler extends Command {
     refreshInterval = config.rules_refreshInterval
     rules_repo = config.rules_repo
     // Debug
-    console.log('loadRulesEngineConfiguration() \n\t'+ util.inspect(config))
+    console.log('loadRulesEngineConfiguration() \n\t' + util.inspect(config))
   }
 
   /** -------------------------------------------------------------------------
@@ -91,11 +91,21 @@ class rulesEngineHandler extends Command {
   loadCustomOperators() {
 
     this.engine.addOperator('doesNotInclude', (factValue, jsonValue) => {
-      return !(factValue).includes(jsonValue)
+      if (factValue !== undefined) {
+        return !(factValue).includes(jsonValue)
+      }
+      else {
+        return false
+      }
     })
 
     this.engine.addOperator('includes', (factValue, jsonValue) => {
-      return (factValue).includes(jsonValue)
+      if (factValue !== undefined) {
+        return (factValue).includes(jsonValue)
+      }
+      else {
+        return false
+      }
     })
 
     this.engine.addOperator('includesAny', (factValue, jsonValue) => {
@@ -116,7 +126,11 @@ class rulesEngineHandler extends Command {
     })
 
     this.engine.addOperator('regex', (factValue, jsonValue) => {
-      return (factValue).search(jsonValue) >= 0
+      if (factValue !== undefined) {
+        return (factValue).search(jsonValue) >= 0
+      } else {
+        return false
+      }
     })
 
     this.engine.addOperator('isEmpty', (factValue, jsonValue) => {
@@ -216,65 +230,77 @@ class rulesEngineHandler extends Command {
 
     // check if the 'interval' was exceeded and we need to reload the rules
     if (lastRefeshTime !== 0 && (rightNow - lastRefeshTime) < (refreshInterval * 60000)) {
-      console.log('NO repository rules refresh required, last refresh ' + ((rightNow - lastRefeshTime) / 60000).toFixed(2) + ' minutes ago (set refresh time = ' + refreshInterval + ' min)')
+      context.log('NO repository rules refresh required, last refresh ' + ((rightNow - lastRefeshTime) / 60000).toFixed(2) + ' minutes ago (set refresh time = ' + refreshInterval + ' min)')
     }
     else {
       // clean up the client-side rules from the engine and reload the rules 
       // DO NOT touch the server - side rules
       // ----------------------------------------------------------------------
-      console.log('Repository rules refresh REQUIRED, last refresh ' +  ((rightNow - lastRefeshTime) / 60000).toFixed(2) + ' minutes ago (set refresh time = ' + refreshInterval + ' min)')
+      context.log('Repository rules refresh REQUIRED, last refresh ' + ((rightNow - lastRefeshTime) / 60000).toFixed(2) + ' minutes ago (set refresh time = ' + refreshInterval + ' min)')
       // Clean up - Remove all rules from the engine.
       rulesList.forEach(rule => {
         const ret = this.engine.removeRule(rule)
-        console.log('successfully removed rule? '+ ret)
+        context.log('successfully removed rule? ' + ret)
       })
       // store the time of the last reload
       lastRefeshTime = Date.now();
-      
-      // set the client-side rules location
-      let rules_repo = context.payload.repository.name
 
+      // set the client-side rules location
+      // by default take the repository that send the event
+      let rules_repo = context.payload.repository.name
+      context.log('rules_repo: ' + rules_repo)
+
+      // if configured, take a custom repo on the Org (kind of centralized)
       if (typeof config.rules_repo !== 'undefined' && config.rules_repo !== '.') {
         rules_repo = config.rules_repo
       }
 
-      // get a list of Rules files from the Repository config
-      const response = await context.github.repos.getContent(
-        {
-          owner: context.payload.repository.owner.login,
-          repo: rules_repo,
-          path: '.github/rules'
-        }
-      );
-
-      // load the file names into an Array
-      response.data.forEach(data => {
-        files.push(data.name)
-      })
-
-      // "One File One Rule" - load them all
-      for (let i = 0; i < files.length; i++) {
-        console.log('reading client-side ('+ rules_repo +') rules file: ' + files[i] )
-        // Read the Rules from the Repository
-        const ruleData = await context.github.repos.getContent(
+      // context.log(util.inspect(context))
+      
+      try {
+        context.log('get list of client rules from Repo: '+ rules_repo)
+        context.log('context.payload.repository.owner.login: '+ context.payload.repository.owner.login)
+        // get a list of Rules files from the Repository config
+        const response = await context.github.repos.getContent(
           {
             owner: context.payload.repository.owner.login,
-            repo: rules_repo,
-            path: '.github/rules/' + files[i]
+            repo: 'bar',
+            path: '.github/rules/'
           }
-        );
+        )
 
-        const rule = new Rule(JSON.stringify(yaml.safeLoad(Buffer.from(ruleData.data.content, 'base64'))))
+        // "One File One Rule" - load them all
+        for (let i = 0; i < files.length; i++) {
+          context.log('reading client-side (' + rules_repo + ') rules file: ' + files[i])
+          // Read the Rules from the Repository
+          const ruleData = await context.github.repos.getContent(
+            {
+              owner: context.payload.repository.owner.login,
+              repo: rules_repo,
+              path: '.github/rules/' + files[i]
+            }
+          );
 
-        // Store the rules, so that we can remove them on Rules reload
-        rulesList.push(rule)
+          // get the BASE64 Decoded rule-data
+          const rule = new Rule(JSON.stringify(yaml.safeLoad(Buffer.from(ruleData.data.content, 'base64'))))
 
-        try {
-          await this.engine.addRule(rule)
-        } catch (err) {
-          console.log('error reading rules from, [.github/rules/]')
-          console.log('error: ' + err)
+          // Store the rules, so that we can remove them on Rules reload
+          rulesList.push(rule)
+
+          try {
+            await this.engine.addRule(rule)
+          } catch (err) {
+            context.log('error reading rules from, [.github/rules/]')
+            context.log('error: ' + err)
+          }
         }
+
+        // load the file names into an Array
+        response.data.forEach(data => {
+          files.push(data.name)
+        })
+      } catch (e) {
+        context.log(e)
       }
     }
   }
@@ -325,7 +351,7 @@ class rulesEngineHandler extends Command {
     var facts = flatten(context)
     var newFacts = {}
 
-    console.log('translateToRulesFacts(context)')
+    context.log('translateToRulesFacts(context)')
     // Let's turn an Array into a fact
     // Regex to identify an Array, the key contains a sequence number (eg: .1. )
     const regex = /\.\d{1}\.|\d{2}\./;
@@ -355,7 +381,7 @@ class rulesEngineHandler extends Command {
    *              for every event invocation.
    *              This creates some 'loading' overhead but also allows us to
    *              update the rules without having to restart the App.
-   *              (TODO: optimize the rule loading)
+   *              (NOTE: rule loading, operates on interval timeout)
    * @param context
    ------------------------------------------------------------------------- */
   async execute(context) {
@@ -364,6 +390,19 @@ class rulesEngineHandler extends Command {
     await this.getClientRules(context)
     const facts = this.translateToRulesFacts(context)
     let e
+
+    try {
+      console.log('facts payload.action: ' + util.inspect(facts['payload.action']))
+      console.log('facts payload.issue.id: ' + util.inspect(facts['payload.issue.id']))
+      console.log('facts payload.comment.id: ' + util.inspect(facts['payload.comment.id']))
+      console.log('facts payload.comment.body: ' + util.inspect(facts['payload.comment.body']))
+      console.log('facts payload.issue.assignee: ' + util.inspect(facts['payload.issue.assignee.login']))
+      console.log('facts payload.issue.assignees: ' + util.inspect(facts['payload.issue.assignees.login']))
+    }
+    catch (e)
+    {
+      consile.log(e)
+    }
 
     // if (context.payload.sender.type != 'Bot') {
     // Run the engine to evaluate the facts and conditions
@@ -374,7 +413,7 @@ class rulesEngineHandler extends Command {
           e = event
           const m = new handlerMap[event.type]()
           // Debug
-          console.log('===>> Routing to rulesHandler: ' + event.type + '(' + context + ',' + util.inspect(event.params) + ')')
+          context.log('===>> Routing to rulesHandler Class: ' + event.type + '(' + context + ',' + util.inspect(event.params) + ')')
           m.execute(context, event.params.data)
         })
       })
