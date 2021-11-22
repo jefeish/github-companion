@@ -1,195 +1,111 @@
 # Rules
 
-1. [project 'backlog' rule](#Rule-1)
-2. [project 'blocked'' rule](#Rule-2)
-3. [project 'clean up' rule](#Rule-3)
-4. [project 'in progress' rule](#Rule-4)
-5. [project 'In progress' by assignees rule](#Rule-5)
-6. [project card moved rule](#Rule-6)
-7. [project card moved rule](#Rule-7)
-8. [project 'To do' unassigned rule](#Rule-8)
-9. [project 'todo' rule](#Rule-9)
+1. [null](#Rule-1)
+2. [null](#Rule-2)
+3. [null](#Rule-3)
+4. [null](#Rule-4)
+5. [null](#Rule-5)
 ---
 
 ## Rule-1
 
-**Rule Name:** `project 'backlog' rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-backlog.yml](docs/tutorial-project-rules/project-issue-backlog.yml)
+**Rule Name:** `null` &nbsp;&nbsp;&nbsp;&nbsp;
+**Rule File:** [../src/rules/issues-rule-0.yml](../src/rules/issues-rule-0.yml)
 
 ### Conditions
 
 |Fact(s)|Operator|Value|
 |---|---|---|
-|payload.issue.labels.name|contains|Backlog|
-|payload.issue.state|notEqual|closed|
-|payload.issue.labels.name|doesNotContain|Blocked|
+|payload.action|equal|create|
 
 ### Event
 
 |Type|Data|
 |---|---|
-|issuesAssignToProject|Kanban2 , Backlog |
+|issueTalk||
 ---
 
 ## Rule-2
 
-**Rule Name:** `project 'blocked'' rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-blocked.yml](docs/tutorial-project-rules/project-issue-blocked.yml)
+**Rule Name:** `null` &nbsp;&nbsp;&nbsp;&nbsp;
+**Rule File:** [../src/rules/speak-issue-assigned-to-me.yml](../src/rules/speak-issue-assigned-to-me.yml)
 
 ### Conditions
 
 |Fact(s)|Operator|Value|
 |---|---|---|
-|payload.issue.labels.name|contains|Blocked|
-|payload.issue.state|notEqual|closed|
-|payload.sender.type|notEqual|Bot|
+|payload.issue.id|notEmpty||
+|payload.action|equal|assigned|
+|payload.issue.assignee.login|equal|jefeish|
 
 ### Event
 
 |Type|Data|
 |---|---|
-|issuesAssignToProject|Kanban2 , Blocked |
+|issueTalk|hello @jefeish, someone assigned an Issue to you  ,false,false,true,true,true,false,false |
 ---
 
 ## Rule-3
 
-**Rule Name:** `project 'clean up' rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-cleanup.yml](docs/tutorial-project-rules/project-issue-cleanup.yml)
+**Rule Name:** `null` &nbsp;&nbsp;&nbsp;&nbsp;
+**Rule File:** [../src/rules/speak-issue-comment.yml](../src/rules/speak-issue-comment.yml)
 
 ### Conditions
 
 |Fact(s)|Operator|Value|
 |---|---|---|
-|payload.issue.state|equal|closed|
+|payload.issue.id|notEmpty||
+|payload.comment.id|notEmpty||
+|payload.action|equal|created|
+|payload.comment.body|doesNotInclude|@jefeish|
 |payload.sender.type|notEqual|Bot|
 
 ### Event
 
 |Type|Data|
 |---|---|
-|issuesRemoveLabels|Backlog , To do , In progress , Blocked |
+|issueTalk|hello, an Issue comment was created,  ,false,true,true,false,true,false,false |
 ---
 
 ## Rule-4
 
-**Rule Name:** `project 'in progress' rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-inProgress-01.yml](docs/tutorial-project-rules/project-issue-inProgress-01.yml)
+**Rule Name:** `null` &nbsp;&nbsp;&nbsp;&nbsp;
+**Rule File:** [../src/rules/speak-issue-mentioned.yml](../src/rules/speak-issue-mentioned.yml)
 
 ### Conditions
 
 |Fact(s)|Operator|Value|
 |---|---|---|
-|payload.issue.assignees.login|notEmpty||
-|payload.issue.labels.name|contains|To do|
-|payload.issue.state|notEqual|closed|
-|payload.issue.labels.name|doesNotContain|Blocked|
+|payload.issue.id|notEmpty||
+|payload.comment.id|notEmpty||
+|payload.action|equal|created|
+|payload.comment.body|includes|@jefeish|
 |payload.sender.type|notEqual|Bot|
 
 ### Event
 
 |Type|Data|
 |---|---|
-|issuesOverrideLabel|To do , In progress |
+|issueTalk|hello @jefeish, someone mentioned you in an Issue  ,false,true,true,true,true,false,true |
 ---
 
 ## Rule-5
 
-**Rule Name:** `project 'In progress' by assignees rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-inProgress.yml](docs/tutorial-project-rules/project-issue-inProgress.yml)
+**Rule Name:** `null` &nbsp;&nbsp;&nbsp;&nbsp;
+**Rule File:** [../src/rules/speak-issue-opened.yml](../src/rules/speak-issue-opened.yml)
 
 ### Conditions
 
 |Fact(s)|Operator|Value|
 |---|---|---|
-|payload.issue.labels.name|contains|In progress|
-|payload.issue.state|notEqual|closed|
-|payload.issue.labels.name|doesNotContain|Blocked|
-
-### Event
-
-|Type|Data|
-|---|---|
-|issuesAssignToProject|Kanban2 , In progress |
----
-
-## Rule-6
-
-**Rule Name:** `project card moved rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-moved-01.yml](docs/tutorial-project-rules/project-issue-moved-01.yml)
-
-### Conditions
-
-|Fact(s)|Operator|Value|
-|---|---|---|
-|payload.action|equal|moved|
+|payload.issue.id|notEmpty||
+|payload.action|equal|opened|
+|payload.comment.id|isEmpty||
 |payload.sender.type|notEqual|Bot|
 
 ### Event
 
 |Type|Data|
 |---|---|
-|projectRemoveAllIssueAssignees||
----
-
-## Rule-7
-
-**Rule Name:** `project card moved rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-moved.yml](docs/tutorial-project-rules/project-issue-moved.yml)
-
-### Conditions
-
-|Fact(s)|Operator|Value|
-|---|---|---|
-|payload.action|equal|moved|
-|payload.issue.state|notEqual|closed|
-|payload.sender.type|notEqual|Bot|
-
-### Event
-
-|Type|Data|
-|---|---|
-|projectToIssueLabel||
----
-
-## Rule-8
-
-**Rule Name:** `project 'To do' unassigned rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-todo-01.yml](docs/tutorial-project-rules/project-issue-todo-01.yml)
-
-### Conditions
-
-|Fact(s)|Operator|Value|
-|---|---|---|
-|payload.issue.assignees.login|isEmpty||
-|payload.issue.labels.name|doesNotContain|Backlog|
-|payload.issue.state|notEqual|closed|
-|payload.issue.labels.name|doesNotContain|Blocked|
-|payload.sender.type|notEqual|Bot|
-
-### Event
-
-|Type|Data|
-|---|---|
-|issuesOverrideLabel|In progress , To do |
----
-
-## Rule-9
-
-**Rule Name:** `project 'todo' rule` &nbsp;&nbsp;&nbsp;&nbsp;
-**Rule File:** [docs/tutorial-project-rules/project-issue-todo.yml](docs/tutorial-project-rules/project-issue-todo.yml)
-
-### Conditions
-
-|Fact(s)|Operator|Value|
-|---|---|---|
-|payload.issue.labels.name|contains|To do|
-|payload.issue.assignees.login|isEmpty||
-|payload.issue.state|notEqual|closed|
-|payload.issue.labels.name|doesNotContain|Blocked|
-
-### Event
-
-|Type|Data|
-|---|---|
-|issuesAssignToProject|Kanban2 , To do |
+|issueTalk|hello, there is a new Issue.  ,false,true,false,false,true,true,false |
 ---

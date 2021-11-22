@@ -7,6 +7,10 @@
 const fs = require('fs')
 const yaml = require('js-yaml')
 const path_module = require('path');
+// the speech support, just to welcome you
+const say = require('say')
+const voice = "Daniel"
+const speed = 0.1
 
 /**
  * 
@@ -14,6 +18,7 @@ const path_module = require('path');
  * | @param app
  */
 exports.registerEventHandlers = function (app) {
+  say.speak( 'Hello, this is your friendly neighborhood speech bot. My name is Max, I am at your service!', voice, speed)
   app.log('registerEventHandlers')
 
   try {
