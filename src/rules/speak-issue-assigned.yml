@@ -9,7 +9,7 @@ conditions:
     - fact: payload.action
       operator: equal
       value: assigned
-    # The Issue is assigned to user !
+    # The Issue is assigned to user !?
     - fact: payload.issue.assignee.login
       operator: equal
       value: jefeish
@@ -22,7 +22,7 @@ event:
       # what Issue info do you want to hear about ? (true/false)
       issue_action: false
       issue_user: false
-      issue_number: true
+      issue_number: false
       issue_title: true
       issue_repository: true
       issue_body: false

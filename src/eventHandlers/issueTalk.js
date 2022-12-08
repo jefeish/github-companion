@@ -11,7 +11,7 @@ const Command = require('./common/command.js')
 const util = require('util')
 const say = require('say')
 const voice = "Daniel"
-const speed = 0.1
+const speed = 1.0
 
 let instance = null
 

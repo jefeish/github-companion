@@ -10,7 +10,7 @@ const path_module = require('path');
 // the speech support, just to welcome you
 const say = require('say')
 const voice = "Daniel"
-const speed = 0.1
+const speed = 1.0
 
 /**
  * 

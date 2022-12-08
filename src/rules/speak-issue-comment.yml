@@ -13,7 +13,9 @@ conditions:
     - fact: payload.action
       operator: equal
       value: created
-    # The Issue DOES NOT @mention the user!
+    # The Issue DOES NOT @mention the user! 
+    # we need this because we have an explicit Rule for "user mentioned"
+    # without this condition we would have the bot tell us about the Issue twice
     - fact: payload.comment.body
       operator: doesNotInclude
       value: '@jefeish'
