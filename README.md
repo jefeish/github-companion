@@ -3,7 +3,7 @@
 
 ### This is Max, a speech bot!
 
-Max is a GitHub Companion (App) that notifies you on events, verbally. Hopefully making it more fun to keep up with GitHub activities.
+Max is a GitHub Companion (App) that notifies you on events, verbally. Hopefully making it more fun to keep up with GitHub notifications.
 
 <br><br><br><br>
 
