@@ -9,7 +9,7 @@ Max is a GitHub Companion (App) that notifies you on events, verbally. Hopefully
 
 ## Quickstart
 
-`Max` needs to run on your local system in order to "speak" to you. Since `Max` is based on Probot, we recommend that you run it locally in **Dev mode** (`npm run dev`).
+`Max` needs to run on your local system in order to "speak" to you. We recommend that you run it locally in **Dev mode** (`npm run dev`), or **Normal** mode (`npm start`).
 
 ## What does it look like?!
 
