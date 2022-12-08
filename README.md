@@ -9,6 +9,8 @@ Max is a GitHub Companion (App) that notifies you on events, verbally. Hopefully
 
 ## Quickstart
 
+### Install this App a regular [GitHub App](https://docs.github.com/en/developers/apps/managing-github-apps/installing-github-apps)
+
 `Max` needs to run on your local system in order to "speak" to you. We recommend that you run it locally in **Dev mode** (`npm run dev`), or **Normal** mode (`npm start`).
 
 ## What does it look like?!
