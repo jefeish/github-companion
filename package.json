@@ -14,7 +14,7 @@
     "probot-app"
   ],
   "scripts": {
-    "dev": "nodemon --exec \"npm start\"",
+    "dev": "nodemon --exec \"npm start\" -- --port 9000",
     "debug": "node --nolazy ./src/index.js",
     "start": "probot run ./src/index.js",
     "test": "jest"

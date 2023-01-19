@@ -1,8 +1,12 @@
 /** -------------------------------------------------------------------------
 *
-* @description Event Handler Class that uses a Rules-Engine
+* @description An Event Handler Class that uses a Rules-Engine to process
+*              GitHub Events against a set of Rules (yaml files).
+*              If the conditions of a Rule match event parameters, 
+*              this class will invoke the corresponding handler class,
+*              specified in the rules yaml.
 *
-------------------------------------------------------------------------- */
+* ------------------------------------------------------------------------- */
 
 const Command = require('./common/command.js')
 const Engine = require('json-rules-engine').Engine
@@ -26,11 +30,11 @@ let rulesList = []
  * 
  * @todo This needs to be a 'Singleton' !!!
  ------------------------------------------------------------------------- */
-class rulesEngineHandler extends Command {
+class eventHandler extends Command {
   constructor(rulesPath, eventHandlersPath) {
     super()
     this.rulesPath = process.cwd() + '/src/rules'
-    this.eventHandlersPath = process.cwd() + '/src/eventHandlers'
+    this.eventHandlersPath = process.cwd() + '/src'
     // make all Classes available, that can process an Event.
     this.loadEventHandlers(this.eventHandlersPath, handlerMap)
     // Create a Rules-Engine instance
@@ -39,7 +43,7 @@ class rulesEngineHandler extends Command {
     // Prepare the Rules-Engine
     this.loadCustomOperators()
     this.getServerRules('')
-    this.config = this.loadRulesEngineConfiguration()
+    this.config = this.loadeventConfiguration()
   }
 
   /** -------------------------------------------------------------------------
@@ -47,7 +51,7 @@ class rulesEngineHandler extends Command {
    ------------------------------------------------------------------------- */
   static getInstance() {
     if (!instance) {
-      instance = new rulesEngineHandler()
+      instance = new eventHandler()
     }
 
     return instance
@@ -57,14 +61,14 @@ class rulesEngineHandler extends Command {
    * @description Load custom configurations.
    *  Eg.: client rules repo, rules reload-interval etc.
    ------------------------------------------------------------------------- */
-  loadRulesEngineConfiguration() {
+  loadeventConfiguration() {
     // eslint-disable-next-line no-path-concat
     const tmp_config = fs.readFileSync(process.cwd() + '/.github/config.yml')
     config = JSON.parse(JSON.stringify(yaml.safeLoad(tmp_config), null, 4))
     refreshInterval = config.rules_refreshInterval
     rules_repo = config.rules_repo
     // Debug
-    console.log('loadRulesEngineConfiguration() \n\t' + util.inspect(config))
+    console.log('loadeventConfiguration() \n\t' + util.inspect(config))
   }
 
   /** -------------------------------------------------------------------------
@@ -306,10 +310,10 @@ class rulesEngineHandler extends Command {
   }
 
   /** -------------------------------------------------------------------------
-   * @description Transform GitHub context (JSON) into RulesEngine Facts.
+   * @description Transform GitHub context (JSON) into event Facts.
    *              This is a little 'workaround' method.
    * 
-   *              A sample RulesEngine Fact:
+   *              A sample event Fact:
    *              {key: value}
    * 
    *              Sample JSON context (dummy array 'a[]'):
@@ -385,9 +389,9 @@ class rulesEngineHandler extends Command {
    * @param context
    ------------------------------------------------------------------------- */
   async execute(context) {
-    context.log('rulesEngineHandler.execute()')
+    context.log('eventHandler.execute()')
     // check if client-side rules need to be reloaded, if yes, do so
-    await this.getClientRules(context)
+    // await this.getClientRules(context)
     const facts = this.translateToRulesFacts(context)
     let e
 
@@ -430,4 +434,4 @@ class rulesEngineHandler extends Command {
   }
 }
 
-module.exports = rulesEngineHandler;
+module.exports = eventHandler;

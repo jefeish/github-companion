@@ -17,16 +17,13 @@ conditions:
     - fact: payload.comment.body
       operator: includes
       value: '@jefeish'
-    # Prevent loops
-    - fact: payload.sender.type
-      operator: notEqual
-      value: Bot
+
 event:
-  type: issueTalk
+  type: issueHandler
   params:
     data: 
       # some greeting string
-      greeting: 'hello @jefeish, someone mentioned you in an Issue '
+      greeting: 'hello {{user}}, someone mentioned you in an Issue '
       # what Issue info do you want to hear about ? (true/false)
       issue_action: false
       issue_user: true

@@ -1,11 +1,8 @@
-// ----------------------------------------------------------------------------
-//
-// Description: Speech Handler Class.
-// 
-//  PLEASE REPLACE ALL `change this!` MARKERS WITH YOUR OWN CODE 
-//  (including this)
-//
-// ----------------------------------------------------------------------------
+/** ---------------------------------------------------------------------------
+ * 
+ *  @description: This class is used to generate speech from text.
+ * 
+---------------------------------------------------------------------------- */
 
 const Command = require('./common/command.js')
 const util = require('util')
@@ -15,15 +12,9 @@ const speed = 1.0
 
 let instance = null
 
-const phonetics = {
-  "@": "",
-  "jefeish": "yergan",
-  "primetheus": "prymetheus"
-}
+class issueHandler extends Command {
 
-class issueTalk extends Command {
-
-  // eslint-disable-next-line no-useless-constructor
+  //  eslint-disable-next-line no-useless-constructor
   constructor() {
     super()
   }
@@ -33,7 +24,7 @@ class issueTalk extends Command {
    */
   static getInstance() {
     if (!instance) {
-      instance = new issueTalk()
+      instance = new issueHandler()
     }
 
     return instance
@@ -47,6 +38,17 @@ class issueTalk extends Command {
    */
   execute(context, data) {
 
+    context.log.debug('issueHandler.execute()')
+    /**
+     * @description: data to replace phonetic characters with their phonetic equivalent
+     *               (make the bot sound better)
+     */
+    const phonetics = {
+      "@": "",
+      "jefeish": "yergan",
+      "primetheus": "prymetheus"
+    }
+    
     const greeting = data['greeting']
     let issue_action = ''
     let issue_user = ''
@@ -63,7 +65,7 @@ class issueTalk extends Command {
     let issue_body_txt
     let issue_comment_txt
     let issue_repository_txt
-
+            
     if (data['issue_action']) {
       issue_action = context.payload.action
       issue_action_txt = ', '+ issue_action +' an Issue '
@@ -133,15 +135,16 @@ class issueTalk extends Command {
       data = ' '
     }
 
-    let text =  greeting + issue_user_txt + issue_action_txt +  issue_number_txt + issue_title_txt + issue_repository_txt + issue_body_txt + issue_comment_txt
+    let text =  greeting + issue_user_txt + issue_action_txt + issue_number_txt + issue_title_txt + issue_repository_txt + issue_body_txt + issue_comment_txt
 
     for (const [key, value] of Object.entries(phonetics)) {
       text = text.replaceAll(key, value)
     }
 
-    console.log('text: '+ text)
+    console.log('text: ' + text)
+    // invike the 'say' module to generate speech
     say.speak( text, voice, speed)
   }
 }
 
-module.exports = issueTalk
+module.exports = issueHandler

@@ -1,0 +1,48 @@
+---
+data:
+  # some greeting string
+  greeting: "hello, an Issue comment was created, "
+  # what Issue info do you want to hear about ? (true/false)
+  issue_action: false
+  issue_user: true
+  issue_number: true
+  issue_title: false
+  issue_repository: true
+  issue_body: false
+  issue_comment: false
+
+  # issue_opened:
+  #   # some greeting string
+  #   greeting: 'hello, there is a new Issue.'
+  #   # what Issue info do you want to hear about ? (true/false)
+  #   issue_action: false
+  #   issue_user: true
+  #   issue_number: false
+  #   issue_title: false
+  #   issue_repository: true
+  #   issue_body: true
+  #   issue_comment: false
+
+  # issue_mentioned:
+  #   # some greeting string
+  #   greeting: 'hello, someone mentioned you in an Issue '
+  #   # what Issue info do you want to hear about ? (true/false)
+  #   issue_action: false
+  #   issue_user: true
+  #   issue_number: false
+  #   issue_title: false
+  #   issue_repository: true
+  #   issue_body: true
+  #   issue_comment: false
+
+  # issue_assigned:
+  #   # some greeting string
+  #   greeting: 'hello, someone assigned an Issue to you '
+  #   # what Issue info do you want to hear about ? (true/false)
+  #   issue_action: false
+  #   issue_user: true
+  #   issue_number: false
+  #   issue_title: false
+  #   issue_repository: true
+  #   issue_body: true
+  #   issue_comment: false

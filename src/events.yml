@@ -1,0 +1,70 @@
+---
+# ----------------------------------------------------------------------------------------------------------------------
+# List of available Webhook events: https://developer.github.com/webhooks/event-payloads
+# Content syntax:
+# <event_name>: [<handler>, <handler>, ...]
+#
+# The 'handler' name represents a .js class file name, inside the 'eventHandlers' folder
+#
+# ----------------------------------------------------------------------------------------------------------------------
+
+check_suite.requested: [eventHandler]
+check_suite.completed: [eventHandler]
+
+issues.opened: [eventHandler]
+issues.closed: [eventHandler]
+issues.edited: [eventHandler]
+issues.deleted: [eventHandler]
+issues.pinned: [eventHandler]
+issues.unpinned: [eventHandler]
+issues.reopened: [eventHandler]
+issues.assigned: [eventHandler]
+issues.unassigned: [eventHandler]
+issues.labeled: [eventHandler]
+issues.unlabeled: [eventHandler]
+issues.locked: [eventHandler]
+issues.unlocked: [eventHandler]
+issues.transferred: [eventHandler]
+issues.milestoned: [eventHandler]
+issues.demilestoned: [eventHandler]
+
+issue_comment.created: [eventHandler]
+issue_comment.edited: [eventHandler]
+issue_comment.deleted: [eventHandler]
+
+# dependabot_alert.created: [eventHandler]
+# dependabot_alert.dismissed: [eventHandler]
+# dependabot_alert.fixed: [eventHandler]
+# dependabot_alert.reintroduced: [eventHandler]
+# dependabot_alert.reopened: [eventHandler]
+
+pull_request.assigned: [eventHandler]
+pull_request.unassigned: [eventHandler]
+pull_request.labeled: [eventHandler]
+pull_request.unlabeled: [eventHandler]
+pull_request.opened: [eventHandler]
+pull_request.edited: [eventHandler]
+pull_request.closed: [eventHandler]
+pull_request.reopened: [eventHandler]
+pull_request.synchronize: [eventHandler]
+pull_request.ready_for_review: [eventHandler]
+pull_request.locked: [eventHandler]
+pull_request.unlocked: [eventHandler]
+
+pull_request_review.submitted: [eventHandler]
+pull_request_review.edited: [eventHandler]
+pull_request_review.dismissed: [eventHandler]
+
+pull_request_review_comment.created: [eventHandler]
+pull_request_review_comment.edited: [eventHandler]
+pull_request_review_comment.deleted: [eventHandler]
+
+repository.created: [eventHandler]
+repository.deleted: [eventHandler]
+repository.archived: [eventHandler]
+repository.unarchived: [eventHandler]
+repository.edited: [eventHandler]
+repository.renamed: [eventHandler]
+repository.transferred: [eventHandler]
+repository.publicized: [eventHandler]
+repository.privatized: [eventHandler]

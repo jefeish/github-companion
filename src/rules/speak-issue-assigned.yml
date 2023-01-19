@@ -14,11 +14,11 @@ conditions:
       operator: equal
       value: jefeish
 event:
-  type: issueTalk
+  type: issueHandler
   params:
     data: 
       # some greeting string
-      greeting: 'hello @jefeish, someone assigned an Issue to you '
+      greeting: 'hello {{user}}, someone assigned an Issue to you '
       # what Issue info do you want to hear about ? (true/false)
       issue_action: false
       issue_user: false
