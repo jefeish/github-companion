@@ -8,7 +8,7 @@ const path_module = require('path');
 // the speech support, just to welcome you
 const say = require('say')
 const voice = "Daniel"
-const speed = 1.0
+const speed = 1.1
 /**
  * This is the main entrypoint to your Probot app 
  * @param {import('probot').Application} app
