@@ -25,7 +25,7 @@ event:
   params:
     data:            
       # some greeting string
-      greeting: 'hello {{user}}, an Issue comment was created, '
+      greeting: 'hello yergan, an Issue comment was created, '
       # what Issue info do you want to hear about ? (true/false) 
       issue_action: false
       issue_user: true
@@ -33,7 +33,7 @@ event:
       issue_title: false
       issue_repository: true
       issue_body: false
-      issue_comment: false
+      issue_comment: true
 
 # default is '1'
 priority: 1

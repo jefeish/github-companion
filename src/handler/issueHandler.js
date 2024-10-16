@@ -46,7 +46,8 @@ class issueHandler extends Command {
     const phonetics = {
       "@": "",
       "jefeish": "yergan",
-      "primetheus": "prymetheus"
+      "primetheus": "prymetheus",
+      "github": "Ghit-hub",
     }
     
     const greeting = data['greeting']
@@ -76,7 +77,7 @@ class issueHandler extends Command {
     
     if (data['issue_user']) {
       issue_user = context.payload.issue.user.login
-      issue_user_txt = ', by user '+ issue_user +' '
+      issue_user_txt = ' '+ issue_user +', '
     }
     else {
       issue_user_txt = ' '
@@ -84,7 +85,7 @@ class issueHandler extends Command {
     
     if (data['issue_number']) {
       issue_number = context.payload.issue.number
-      issue_number_txt = ', the Issue number is: '+ issue_number +' '
+      issue_number_txt = ' Issue '+ issue_number +', '
     }
     else {
       issue_number_txt = ' '
@@ -99,6 +100,8 @@ class issueHandler extends Command {
     }
     
     if (data['issue_body']) {
+      // replace any 'fill' characters such as '...', '---', etc. with a space
+      issue_body = issue_body.replace(/(\.\.\.|---)/g, ' ');
       issue_body = context.payload.issue.body
       issue_body_txt = ', the Issue text says: '+ issue_body +' '
     }
@@ -111,10 +114,10 @@ class issueHandler extends Command {
       const comment_array = issue_comment.split(' ')
       
       if (comment_array.length > 10) {
-        issue_comment_txt = ', Issue comment says: ' + comment_array.slice(0,10).join(' ') + ' and so on... '
+        issue_comment_txt = ', the comment says: ' + comment_array.slice(0,10).join(' ') + ' and so on... '
       }
       else {
-        issue_comment_txt = ', Issue comment says: ' + issue_comment + ' '
+        issue_comment_txt = ', the comment says: ' + issue_comment + ' '
       }
     }
     else {
@@ -123,7 +126,7 @@ class issueHandler extends Command {
 
     if (data['issue_repository']) {
       issue_repository = context.payload.repository.name
-      issue_repository_txt = ', the repository name is: '+ issue_repository +' '
+      issue_repository_txt = ', in repository '+ issue_repository +' '
     }
     else {
       issue_repository_txt = ''
@@ -135,7 +138,8 @@ class issueHandler extends Command {
       data = ' '
     }
 
-    let text =  greeting + issue_user_txt + issue_action_txt + issue_number_txt + issue_title_txt + issue_repository_txt + issue_body_txt + issue_comment_txt
+    // let text =  greeting + issue_user_txt + issue_action_txt + issue_number_txt + issue_title_txt + issue_repository_txt + issue_body_txt + issue_comment_txt + '.'
+    let text =  'user'+ issue_user_txt +'has commented on'+ issue_number_txt + issue_title_txt + issue_repository_txt + issue_body_txt + issue_comment_txt + '.'
 
     for (const [key, value] of Object.entries(phonetics)) {
       text = text.replaceAll(key, value)

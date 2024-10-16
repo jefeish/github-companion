@@ -34,7 +34,7 @@ class eventHandler extends Command {
   constructor(rulesPath, eventHandlersPath) {
     super()
     this.rulesPath = process.cwd() + '/src/rules'
-    this.eventHandlersPath = process.cwd() + '/src'
+    this.eventHandlersPath = process.cwd() + '/src/handler'
     // make all Classes available, that can process an Event.
     this.loadEventHandlers(this.eventHandlersPath, handlerMap)
     // Create a Rules-Engine instance
@@ -85,6 +85,7 @@ class eventHandler extends Command {
         }
       });
     });
+    console.log('handlerMap: ' + util.inspect(handlerMap))
   }
 
   /** -------------------------------------------------------------------------
@@ -415,6 +416,8 @@ class eventHandler extends Command {
       .then(results => {
         results.events.map(event => {
           e = event
+          context.log('===>> Rule Matched: ' + event.type + '(' + util.inspect(event.params) + ')')
+          context.log('handlerMap[event.type]: '+ util.inspect(handlerMap))
           const m = new handlerMap[event.type]()
           // Debug
           context.log('===>> Routing to rulesHandler Class: ' + event.type + '(' + context + ',' + util.inspect(event.params) + ')')
@@ -424,7 +427,7 @@ class eventHandler extends Command {
       .catch(function (err) {
         console.log('error: ', err)
         console.log('event.type: >' + e.type + '<')
-        console.log('util.inspect(event.params.data)')
+        console.log(util.inspect(e.params))
       })
 
     // }

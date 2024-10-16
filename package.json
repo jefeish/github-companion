@@ -14,9 +14,9 @@
     "probot-app"
   ],
   "scripts": {
-    "dev": "nodemon --exec \"npm start\" -- --port 9000",
+    "dev": "PORT=9000 nodemon --exec \"npm start\" -- --port 9000",
     "debug": "node --nolazy ./src/index.js",
-    "start": "probot run ./src/index.js",
+    "start": "PORT=9000 probot run ./src/index.js",
     "test": "jest"
   },
   "dependencies": {
